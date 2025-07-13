@@ -37,6 +37,7 @@ public:
   virtual int scanForName(String name, bool withDuplicates);
   virtual int scanForUuid(String uuid, bool withDuplicates);
   virtual int scanForAddress(String address, bool withDuplicates);
+  virtual int scanForPrivateAddress(uint8_t IRK[16], bool withDuplicates);
   virtual void stopScan();
   virtual BLEDevice available();
 
@@ -67,6 +68,8 @@ private:
   String _scanNameFilter;
   String _scanUuidFilter;
   String _scanAddressFilter;
+  bool _scanIRKFilterEnabled;
+  uint8_t _scanIRKFilter[16];
 };
 
 extern GAPClass& GAP;

@@ -108,28 +108,42 @@ int GAPClass::scan(bool withDuplicates)
 
 int GAPClass::scanForName(String name, bool withDuplicates)
 {
-  _scanNameFilter    = name;
-  _scanUuidFilter    = "";
-  _scanAddressFilter = "";
+  _scanNameFilter       = name;
+  _scanUuidFilter       = "";
+  _scanAddressFilter    = "";
+  _scanIRKFilterEnabled = false;
 
   return scan(withDuplicates);
 }
 
 int GAPClass::scanForUuid(String uuid, bool withDuplicates)
 {
-  _scanNameFilter    = "";
-  _scanUuidFilter    = uuid;
-  _scanAddressFilter = "";
+  _scanNameFilter       = "";
+  _scanUuidFilter       = uuid;
+  _scanAddressFilter    = "";
+  _scanIRKFilterEnabled = false;
 
   return scan(withDuplicates);
 }
 
 int GAPClass::scanForAddress(String address, bool withDuplicates)
 {
-  _scanNameFilter    = "";
-  _scanUuidFilter    = "";
-  _scanAddressFilter = address;
+  _scanNameFilter       = "";
+  _scanUuidFilter       = "";
+  _scanAddressFilter    = address;
+  _scanIRKFilterEnabled = false;
 
+  return scan(withDuplicates);
+}
+
+int GAPClass::scanForPrivateAddress(uint8_t IRK[16], bool withDuplicates)
+{
+  _scanNameFilter       = "";
+  _scanUuidFilter       = "";
+  _scanAddressFilter    = "";
+  _scanIRKFilterEnabled = true;
+  memcpy(_scanIRKFilter, IRK, 16);
+  
   return scan(withDuplicates);
 }
 
@@ -260,6 +274,8 @@ bool GAPClass::matchesScanFilter(const BLEDevice& device)
   } else if (_scanNameFilter.length() > 0 && _scanNameFilter != device.localName()) {
     return false; // drop doesn't match
   } else if (_scanUuidFilter.length() > 0 && !(_scanUuidFilter.equalsIgnoreCase(device.advertisedServiceUuid()))) {
+    return false; // drop doesn't match
+  } else if (_scanIRKFilterEnabled && !device.matchesIRK(_scanIRKFilter)) {
     return false; // drop doesn't match
   }
 

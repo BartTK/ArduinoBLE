@@ -70,6 +70,7 @@ public:
   virtual int scanForName(String name, bool withDuplicates = false);
   virtual int scanForUuid(String uuid, bool withDuplicates = false);
   virtual int scanForAddress(String address, bool withDuplicates = false);
+  virtual int scanForPrivateAddress(uint8_t IRK[16], bool withDuplicates = false);
   virtual void stopScan();
 
   virtual BLEDevice central();

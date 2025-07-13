@@ -19,6 +19,7 @@
 
 #include "utility/ATT.h"
 #include "utility/BLEUuid.h"
+#include "utility/btct.h"
 #include "utility/HCI.h"
 
 #include "remote/BLERemoteDevice.h"
@@ -80,6 +81,19 @@ String BLEDevice::address() const
   sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", _address[5], _address[4], _address[3], _address[2], _address[1], _address[0]);
 
   return result;
+}
+
+bool BLEDevice::matchesIRK(uint8_t IRK[16]) const
+{
+  if ((_address[0] & 0b11000000) != 0b01000000) {
+    return false;
+  }
+
+  uint8_t hash[3];
+  uint8_t prand[3];
+  memcpy(prand, _address, 3);
+  btct.ah(IRK, prand, hash);
+  return memcmp(hash, _address + 3, 3) == 0;
 }
 
 bool BLEDevice::hasLocalName() const

@@ -48,6 +48,7 @@ public:
   virtual bool disconnect();
 
   virtual String address() const;
+  virtual bool matchesIRK(uint8_t IRK[16]) const;
 
   bool hasLocalName() const;
     

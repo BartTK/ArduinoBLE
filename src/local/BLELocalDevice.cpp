@@ -384,6 +384,11 @@ int BLELocalDevice::scanForAddress(String address, bool withDuplicates)
   return GAP.scanForAddress(address, withDuplicates);
 }
 
+int BLELocalDevice::scanForPrivateAddress(uint8_t IRK[16], bool withDuplicates)
+{
+  return GAP.scanForPrivateAddress(IRK, withDuplicates);
+}
+
 void BLELocalDevice::stopScan()
 {
   GAP.stopScan();
